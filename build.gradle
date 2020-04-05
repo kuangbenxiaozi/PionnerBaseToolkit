@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    useLibrary 'org.apache.http.legacy'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /*fresco begin*/
+    api "com.facebook.fresco:fresco:1.2.0"
+
+    // For animated GIF support
+    api "com.facebook.fresco:animated-gif:1.2.0"
+
+    // For webp support
+    api "com.facebook.fresco:animated-webp:1.2.0"
+    api "com.facebook.fresco:webpsupport:1.2.0"
+    api "com.facebook.fresco:imagepipeline-okhttp3:1.2.0"
+
+    /*fresco end*/
+}
