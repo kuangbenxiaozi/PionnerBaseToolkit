@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 19
@@ -30,19 +31,64 @@ android {
     useLibrary 'org.apache.http.legacy'
 }
 
+ext {
+    //compile version
+    compileSdkVersion = 28
+    //build tools version
+    buildToolsVersion = '28.0.0'
+    //min sdk version
+    minsdkVersion = 19
+    //target Version
+    targetSdkVersion = 28
+    //support lib version
+    supportVersion = '28.0.0'
+
+    frescoVersion = '1.2.0'
+
+    tookitName = 'PionnerBaseToolkit-release'
+    tookitJarName = 'PionnerBaseToolkit_v' + versionName + ".jar"
+    tookitAarName = 'PionnerBaseToolkit_v' + versionName + ".aar"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$supportVersion"
 
     /*fresco begin*/
-    api "com.facebook.fresco:fresco:1.2.0"
+    api "com.facebook.fresco:fresco:$frescoVersion"
 
     // For animated GIF support
-    api "com.facebook.fresco:animated-gif:1.2.0"
+    api "com.facebook.fresco:animated-gif:$frescoVersion"
 
     // For webp support
-    api "com.facebook.fresco:animated-webp:1.2.0"
-    api "com.facebook.fresco:webpsupport:1.2.0"
-    api "com.facebook.fresco:imagepipeline-okhttp3:1.2.0"
-
+    api "com.facebook.fresco:animated-webp:$frescoVersion"
+    api "com.facebook.fresco:webpsupport:$frescoVersion"
+    api "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     /*fresco end*/
+}
+
+task makeTookitJar(type: Jar) {
+    dependsOn build
+    dependsOn clean
+    build.mustRunAfter clean
+
+    //导出的jar文件名称
+    archiveName = "$tookitJarName"
+    //从哪个目录打包jar
+    from('build/intermediates/packaged-classes/release/classes.jar')
+    //from('build/intermediates/packaged-classes/debug/classes.jar')
+    //导出的jar文件的存放目录（未指定则默认存放在build/libs下）
+    destinationDir = file('build/libs')
+}
+
+task makeTookitAar(type: Copy) {
+    dependsOn build
+    dependsOn clean
+    build.mustRunAfter clean
+
+    from 'build/outputs/aar/' + "$tookitName" + '.aar'
+    into 'build/libs'
+    rename {
+        String fileName -> "$tookitAarName"
+    }
 }
